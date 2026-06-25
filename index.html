@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Untuk Kamu 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --rose:#C1395E;--deep-rose:#8B1A3A;--blush:#F2A7BB;
+  --gold:#D4A657;--gold-light:#F5D78E;
+  --dark:#0D0509;--dark2:#1A0B12;
+  --cream:#FDF0F4;--white:#fff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--cream);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* ═══ CANVAS PARTICLES ═══ */
+#canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ═══ HERO ═══ */
+.hero{
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:2rem;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%, #3d0820 0%, var(--dark) 70%);
+}
+.hero-glow{
+  position:absolute;width:600px;height:600px;
+  background:radial-gradient(circle, rgba(193,57,94,.25) 0%, transparent 70%);
+  border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}}
+
+.hero-content{position:relative;z-index:2}
+
+.crown{font-size:3rem;display:block;margin-bottom:1rem;animation:crownFloat 3s ease-in-out infinite}
+@keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-10px) rotate(5deg)}}
+
+.hero-eyebrow{
+  font-size:.75rem;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1rem;
+  animation:fadeSlideUp .8s ease both;
+}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(3rem,9vw,6.5rem);line-height:1.05;
+  color:var(--white);margin-bottom:1.5rem;
+  animation:fadeSlideUp 1s .2s ease both;
+}
+.hero h1 span{color:var(--gold);font-style:italic;font-weight:600}
+.hero-sub{
+  font-size:1rem;color:rgba(255,255,255,.5);letter-spacing:.1em;
+  animation:fadeSlideUp 1s .4s ease both;margin-bottom:3rem;
+}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* typing cursor */
+.typed-wrap{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(1.1rem,3vw,1.6rem);color:var(--blush);
+  min-height:2em;animation:fadeSlideUp 1s .6s ease both;
+  margin-bottom:2.5rem;
+}
+.cursor{display:inline-block;width:2px;height:1.2em;background:var(--rose);margin-left:2px;vertical-align:middle;animation:blink .7s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.scroll-down{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  color:rgba(255,255,255,.3);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+}
+.scroll-arrow{width:20px;height:20px;border-right:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3);transform:rotate(45deg);animation:arrowBounce 1.5s ease-in-out infinite}
+@keyframes arrowBounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(6px)}}
+
+/* ═══ DIVIDER ═══ */
+.divider{
+  position:relative;z-index:1;text-align:center;padding:1.5rem;
+  background:linear-gradient(to right, transparent, var(--rose), transparent);
+  height:1px;margin:0;
+}
+.divider-gem{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:var(--dark);padding:0 1rem;font-size:1.2rem;
+}
+
+/* ═══ PHOTOS SLIDESHOW ═══ */
+.photos-section{
+  position:relative;z-index:1;
+  padding:5rem 1.5rem;
+  background:linear-gradient(180deg, var(--dark) 0%, var(--dark2) 100%);
+  text-align:center;
+}
+.section-label{
+  font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.8rem;
+  opacity:0;transform:translateY(20px);transition:all .7s ease;
+}
+.section-label.visible{opacity:1;transform:none}
+.section-title{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(2rem,6vw,3.5rem);color:var(--white);margin-bottom:3rem;
+  opacity:0;transform:translateY(20px);transition:all .7s .15s ease;
+}
+.section-title.visible{opacity:1;transform:none}
+.section-title em{color:var(--gold);font-style:italic;font-weight:600}
+
+/* slideshow */
+.slideshow{
+  position:relative;width:min(380px,88vw);margin:0 auto 2.5rem;
+  border-radius:6px;overflow:visible;
+}
+.slide-track{
+  position:relative;width:100%;aspect-ratio:3/4;
+  border-radius:6px;overflow:hidden;
+  box-shadow:0 20px 80px rgba(193,57,94,.35), 0 0 0 6px rgba(212,166,87,.2);
+}
+.slide{
+  position:absolute;inset:0;opacity:0;transition:opacity .8s ease;
+}
+.slide.active{opacity:1}
+.slide img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+/* photo placeholder style */
+.slide-placeholder{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#2a0d18,#1a0b12);
+  color:rgba(255,255,255,.35);font-size:.85rem;gap:.8rem;
+}
+.slide-placeholder .ph-icon{font-size:3rem;opacity:.4}
+
+.slide-dots{
+  display:flex;justify-content:center;gap:.6rem;margin-top:1.2rem;
+}
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.2);cursor:pointer;
+  transition:all .3s;
+}
+.dot.active{background:var(--gold);width:20px;border-radius:3px}
+
+/* corner deco */
+.slide-deco{
+  position:absolute;pointer-events:none;z-index:3;
+}
+.deco-tl{top:-8px;left:-8px;width:28px;height:28px;border-top:2px solid var(--gold);border-left:2px solid var(--gold)}
+.deco-tr{top:-8px;right:-8px;width:28px;height:28px;border-top:2px solid var(--gold);border-right:2px solid var(--gold)}
+.deco-bl{bottom:-8px;left:-8px;width:28px;height:28px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold)}
+.deco-br{bottom:-8px;right:-8px;width:28px;height:28px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold)}
+
+.slide-caption{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.1rem;color:var(--blush);margin-top:.5rem;
+}
+
+/* ═══ LETTER ═══ */
+.letter-section{
+  position:relative;z-index:1;
+  background:var(--dark2);
+  padding:5rem 1.5rem;
+}
+.letter-wrap{
+  max-width:640px;margin:0 auto;
+  opacity:0;transform:translateY(40px);transition:all .8s ease;
+}
+.letter-wrap.visible{opacity:1;transform:none}
+
+.letter-paper{
+  background:linear-gradient(135deg,#1e0c14,#160910);
+  border:1px solid rgba(212,166,87,.2);
+  border-radius:4px;padding:3rem 2.5rem 3.5rem;
+  position:relative;overflow:hidden;
+}
+.letter-paper::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(212,166,87,.04) 28px, rgba(212,166,87,.04) 29px);
+}
+.letter-paper::after{
+  content:'❝';position:absolute;top:1.2rem;left:1.5rem;
+  font-family:'Cormorant Garamond',serif;font-size:5rem;
+  color:rgba(193,57,94,.2);line-height:1;
+}
+.letter-paper p{
+  position:relative;z-index:1;
+  font-size:1.05rem;line-height:2;color:rgba(255,255,255,.8);
+  margin-bottom:1.2rem;font-weight:300;
+}
+.letter-paper .sign{
+  position:relative;z-index:1;
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.4rem;color:var(--gold);text-align:right;margin-top:2rem;
+}
+
+/* wax seal */
+.wax-seal{
+  width:70px;height:70px;background:radial-gradient(circle at 35% 35%, #e84a6e, var(--deep-rose));
+  border-radius:50%;margin:2rem auto 0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;box-shadow:0 4px 20px rgba(193,57,94,.5);
+  animation:sealPulse 3s ease-in-out infinite;
+}
+@keyframes sealPulse{0%,100%{box-shadow:0 4px 20px rgba(193,57,94,.5)}50%{box-shadow:0 4px 40px rgba(193,57,94,.8)}}
+
+/* ═══ REASONS ═══ */
+.reasons-section{
+  position:relative;z-index:1;
+  padding:5rem 1.5rem;
+  background:linear-gradient(180deg,var(--dark2),var(--dark));
+  text-align:center;
+}
+.reasons-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;max-width:780px;margin:0 auto;
+}
+.reason-card{
+  background:linear-gradient(135deg,rgba(193,57,94,.1),rgba(139,26,58,.05));
+  border:1px solid rgba(193,57,94,.2);
+  border-radius:6px;padding:2rem 1.2rem;
+  opacity:0;transform:translateY(30px) scale(.96);
+  transition:all .6s ease;
+}
+.reason-card.visible{opacity:1;transform:none}
+.reason-card:hover{
+  background:linear-gradient(135deg,rgba(193,57,94,.2),rgba(139,26,58,.1));
+  border-color:rgba(212,166,87,.4);
+  transform:translateY(-5px);
+}
+.reason-card .icon{font-size:2.2rem;display:block;margin-bottom:.8rem}
+.reason-card p{font-size:.9rem;line-height:1.7;color:rgba(255,255,255,.7);font-weight:300}
+
+/* ═══ TIMELINE ═══ */
+.timeline-section{
+  position:relative;z-index:1;
+  padding:5rem 1.5rem;
+  background:var(--dark);
+}
+.timeline{max-width:500px;margin:0 auto;position:relative}
+.timeline::before{
+  content:'';position:absolute;left:20px;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--rose),transparent);
+}
+.t-item{
+  display:flex;gap:1.5rem;margin-bottom:3rem;
+  opacity:0;transform:translateX(-30px);transition:all .6s ease;
+}
+.t-item.visible{opacity:1;transform:none}
+.t-dot{
+  width:42px;height:42px;min-width:42px;
+  border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--deep-rose));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;box-shadow:0 0 20px rgba(193,57,94,.4);
+  position:relative;z-index:1;
+}
+.t-content h3{
+  font-family:'Cormorant Garamond',serif;font-size:1.3rem;
+  color:var(--gold);margin-bottom:.3rem;font-weight:600;
+}
+.t-content p{font-size:.9rem;color:rgba(255,255,255,.6);line-height:1.7;font-weight:300}
+
+/* ═══ FOOTER ═══ */
+footer{
+  position:relative;z-index:1;
+  text-align:center;padding:5rem 1.5rem 4rem;
+  background:linear-gradient(180deg,var(--dark),#060205);
+  overflow:hidden;
+}
+.footer-glow{
+  position:absolute;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(193,57,94,.15) 0%,transparent 70%);
+  border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);
+}
+.big-heart{
+  font-size:5rem;display:block;margin-bottom:1.5rem;
+  animation:heartbeat 1.4s ease-in-out infinite;
+}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.18)}28%{transform:scale(1)}42%{transform:scale(1.1)}}
+footer h2{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(1.5rem,5vw,2.5rem);color:var(--white);margin-bottom:.8rem;
+}
+footer h2 em{color:var(--gold);font-style:italic}
+footer p{color:rgba(255,255,255,.35);font-size:.85rem;letter-spacing:.1em}
+
+/* gold line deco */
+.gold-line{
+  width:60px;height:1px;background:var(--gold);
+  margin:1.5rem auto;opacity:.5;
+}
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <span class="crown">👑</span>
+    <p class="hero-eyebrow">— sebuah pesan dari hati —</p>
+    <h1>Kamu adalah<br><span>Duniaku</span></h1>
+    <p class="hero-sub">yang selalu aku syukuri setiap harinya</p>
+    <div class="typed-wrap"><span id="typed"></span><span class="cursor"></span></div>
+  </div>
+  <div class="scroll-down">
+    <span>scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══ PHOTOS ═══ -->
+<section class="photos-section">
+  <p class="section-label reveal">Kenangan Kita</p>
+  <h2 class="section-title reveal">Foto yang <em>Selalu Aku Simpan</em></h2>
+
+  <div class="slideshow reveal">
+    <!-- CORNER DECO -->
+    <div class="slide-deco deco-tl"></div>
+    <div class="slide-deco deco-tr"></div>
+    <div class="slide-deco deco-bl"></div>
+    <div class="slide-deco deco-br"></div>
+
+    <div class="slide-track">
+      <!-- ✏️ SLIDE 1 — ganti src dengan link foto kamu -->
+      <div class="slide active" id="slide-0">
+        <img src="https://files.catbox.moe/o7pncs.jpg" alt="Foto 1"
+             onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=ph-icon>📸</span><span>Ganti src dengan link foto 1</span></div>'"/>
+      </div>
+      <!-- ✏️ SLIDE 2 -->
+      <div class="slide" id="slide-1">
+        <img src="https://files.catbox.moe/53x0rz.jpg" alt="Foto 2"
+             onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=ph-icon>📸</span><span>Ganti src dengan link foto 2</span></div>'"/>
+      </div>
+      <!-- ✏️ SLIDE 3 -->
+      <div class="slide" id="slide-2">
+        <img src="https://files.catbox.moe/9wrqch.jpg" alt="Foto 3"
+             onerror="this.parentElement.innerHTML='<div class=slide-placeholder><span class=ph-icon>📸</span><span>Ganti src dengan link foto 3</span></div>'"/>
+      </div>
+    </div>
+
+    <div class="slide-dots">
+      <div class="dot active" onclick="goSlide(0)"></div>
+      <div class="dot" onclick="goSlide(1)"></div>
+      <div class="dot" onclick="goSlide(2)"></div>
+    </div>
+  </div>
+  <p class="slide-caption reveal" id="slide-caption">Momen yang selalu ingin aku kenang 🌸</p>
+</section>
+
+<!-- ═══ LETTER ═══ -->
+<section class="letter-section">
+  <p class="section-label reveal" style="text-align:center">Surat Untukmu</p>
+  <h2 class="section-title reveal" style="text-align:center">Dari <em>Hati yang Tulus</em></h2>
+  <div class="letter-wrap reveal">
+    <div class="letter-paper">
+      <p>Hei kamu,</p>
+      <p>
+        Ada hal yang sudah lama ingin aku sampaikan tapi entah kenapa
+        selalu susah diucapkan langsung — jadi aku tulis di sini saja.
+      </p>
+      <p>
+        Kamu tidak tahu betapa banyak hal kecil yang kamu lakukan
+        tanpa sadar, yang ternyata selalu aku ingat. Cara kamu ketawa,
+        cara kamu cerewet soal hal-hal sepele, cara kamu diam tapi tetap ada —
+        semuanya bikin aku sadar betapa beruntungnya aku.
+      </p>
+      <p>
+        Aku tidak butuh yang sempurna. Aku hanya butuh kamu,
+        dengan semua kelebihan dan kekurangan yang ada.
+        Karena menurutku, kamu sudah lebih dari cukup.
+      </p>
+      <p>
+        Terima kasih sudah ada. Terima kasih sudah mau bersama aku.
+        Aku serius — aku tidak mau menukar ini dengan apapun.
+      </p>
+      <div class="sign">Selamanya milikmu ❤️</div>
+    </div>
+    <div class="wax-seal">💌</div>
+  </div>
+</section>
+
+<!-- ═══ REASONS ═══ -->
+<section class="reasons-section">
+  <p class="section-label reveal">Alasannya</p>
+  <h2 class="section-title reveal">Kenapa Aku <em>Suka Kamu</em></h2>
+  <div class="reasons-grid">
+    <div class="reason-card reveal" style="transition-delay:.05s">
+      <span class="icon">🌙</span>
+      <p>Suaramu adalah hal terakhir yang ingin aku dengar sebelum tidur.</p>
+    </div>
+    <div class="reason-card reveal" style="transition-delay:.1s">
+      <span class="icon">☀️</span>
+      <p>Senyummu bisa bikin hari paling berat jadi terasa ringan.</p>
+    </div>
+    <div class="reason-card reveal" style="transition-delay:.15s">
+      <span class="icon">🤍</span>
+      <p>Kamu tidak pernah menghakimi. Aku selalu merasa aman bersamamu.</p>
+    </div>
+    <div class="reason-card reveal" style="transition-delay:.2s">
+      <span class="icon">🔥</span>
+      <p>Caramu semangat soal hal yang kamu suka itu menular banget.</p>
+    </div>
+    <div class="reason-card reveal" style="transition-delay:.25s">
+      <span class="icon">🌊</span>
+      <p>Bersamamu, bahkan diam pun tidak pernah canggung.</p>
+    </div>
+    <div class="reason-card reveal" style="transition-delay:.3s">
+      <span class="icon">👁️</span>
+      <p>Kamu selalu lihat sisi baikku, bahkan waktu aku tidak bisa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIMELINE ═══ -->
+<section class="timeline-section">
+  <p class="section-label reveal" style="text-align:center">Perjalanan Kita</p>
+  <h2 class="section-title reveal" style="text-align:center">Momen yang <em>Tidak Terlupakan</em></h2>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div class="t-dot">✨</div>
+      <div class="t-content">
+        <h3>Pertama Kali Ketemu</h3>
+        <p>Saat itu aku tidak menyangka pertemuan itu akan mengubah segalanya.</p>
+      </div>
+    </div>
+    <div class="t-item reveal" style="transition-delay:.1s">
+      <div class="t-dot">💬</div>
+      <div class="t-content">
+        <h3>Obrolan Pertama</h3>
+        <p>Ngobrol sampai lupa waktu. Dari situ aku tahu ada yang spesial.</p>
+      </div>
+    </div>
+    <div class="t-item reveal" style="transition-delay:.2s">
+      <div class="t-dot">💖</div>
+      <div class="t-content">
+        <h3>Aku Sadar Suka Kamu</h3>
+        <p>Dari hal-hal kecil yang kamu lakukan tanpa kamu sadari.</p>
+      </div>
+    </div>
+    <div class="t-item reveal" style="transition-delay:.3s">
+      <div class="t-dot">🌟</div>
+      <div class="t-content">
+        <h3>Sekarang & Seterusnya</h3>
+        <p>Dan semoga masih banyak kenangan indah yang akan kita buat bersama.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-glow"></div>
+  <span class="big-heart">❤️</span>
+  <h2>Aku <em>Sayang</em> Kamu</h2>
+  <div class="gold-line"></div>
+  <p>— selalu, selamanya, tanpa syarat —</p>
+</footer>
+
+<script>
+/* ══ CANVAS HEARTS + SPARKLES ══ */
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+resize();window.addEventListener('resize',resize);
+
+const HEARTS = '❤️💖💗💕🌸✨⭐'.split('');
+const particles = [];
+for(let i=0;i<55;i++) particles.push(newParticle(true));
+function newParticle(random){
+  return{
+    x: random? Math.random()*W : Math.random()*W,
+    y: random? Math.random()*H : H+20,
+    size: .6+Math.random()*1.4,
+    speed: .3+Math.random()*.8,
+    drift: (Math.random()-.5)*.6,
+    opacity: .15+Math.random()*.35,
+    emoji: HEARTS[Math.floor(Math.random()*HEARTS.length)],
+    rot: Math.random()*Math.PI*2,
+    rotSpeed: (Math.random()-.5)*.04,
+  }
+}
+function animParticles(){
+  ctx.clearRect(0,0,W,H);
+  for(let p of particles){
+    p.y -= p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+    if(p.y < -30) Object.assign(p, newParticle(false));
+    ctx.save();
+    ctx.globalAlpha = p.opacity;
+    ctx.font = `${p.size}rem serif`;
+    ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+    ctx.fillText(p.emoji, 0, 0);
+    ctx.restore();
+  }
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+/* ══ TYPING EFFECT ══ */
+const phrases = [
+  'Kamu yang terbaik yang pernah aku punya...',
+  'Setiap hari bersamamu adalah hadiah...',
+  'Senyummu adalah favoritku...',
+  'Terima kasih sudah ada untukku...',
+];
+let pi=0,ci=0,deleting=false;
+const typedEl = document.getElementById('typed');
+function typeLoop(){
+  const cur = phrases[pi];
+  if(!deleting){
+    typedEl.textContent = cur.slice(0,++ci);
+    if(ci===cur.length){ deleting=true; setTimeout(typeLoop,2000); return; }
+    setTimeout(typeLoop, 55);
+  } else {
+    typedEl.textContent = cur.slice(0,--ci);
+    if(ci===0){ deleting=false; pi=(pi+1)%phrases.length; setTimeout(typeLoop,400); return; }
+    setTimeout(typeLoop, 28);
+  }
+}
+setTimeout(typeLoop, 1200);
+
+/* ══ SLIDESHOW ══ */
+const captions = ['Momen yang selalu ingin aku kenang 🌸','Foto favoritku sama kamu 💕','Kenangan indah kita bersama ✨'];
+let cur=0, total=3, timer;
+function goSlide(n){
+  document.querySelector('.slide.active').classList.remove('active');
+  document.querySelectorAll('.dot')[cur].classList.remove('active');
+  cur=n;
+  document.getElementById('slide-'+cur).classList.add('active');
+  document.querySelectorAll('.dot')[cur].classList.add('active');
+  document.getElementById('slide-caption').textContent = captions[cur];
+  clearInterval(timer); timer=setInterval(()=>goSlide((cur+1)%total),4000);
+}
+timer=setInterval(()=>goSlide((cur+1)%total),4000);
+
+/* ══ SCROLL REVEAL ══ */
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
